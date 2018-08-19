@@ -1,0 +1,112 @@
+/* char s1[] = "a-z";
+     char s2[] = "-a-z";
+     char s3[] = "a-z0-9";
+     char s4[] = "a-b-c";
+	 char s5[] = "a-Z-0";
+	 char s6[] = "a-b-c-A-F-0-3";
+     char s7[] = "a-b-c-d-i-A-D-E-0-3";
+     char s8[] = "a-b-pA-B-G-H-0-1-6-7";*/
+	 
+	 /* expand the input
+	 s1= abcdefghijklmnopqrstuvwxyz
+	 s8= abcdefghijklmnopABCDEFGH01234567
+	 */
+	 
+
+
+
+#include<stdio.h>
+#include<conio.h>
+#include<ctype.h>
+
+void expand(char shortt[],char exp[]);/* dummy variable, because calling function multiple times*/
+
+void main()
+{
+/* inputs */
+     char s1[] = "a-z";
+     char s2[] = "-a-z";
+     char s3[] = "a-z0-9";
+     char s4[] = "a-b-c";
+	 char s5[] = "a-Z-0";
+	 char s6[] = "a-b-c-A-F-0-3";
+     char s7[] = "a-b-c-d-i-A-D-E-0-3";
+     char s8[] = "a-b-pA-B-G-H-0-1-6-7";
+    
+     char t1[100];
+     char t2[100];
+     char t3[100];
+     char t4[100];
+     char t5[100];
+     char t6[100];
+     char t7[100];
+     char t8[100];
+
+
+     expand(s1,t1);
+     printf("%s\n",t1);
+     expand(s2,t2);
+     printf("%s\n",t2);
+     expand(s3,t3);
+     printf("%s\n",t3);
+     expand(s4,t4);
+     printf("%s\n",t4);
+     expand(s5,t5);
+     printf("%s\n",t5);
+     expand(s6,t6);
+     printf("%s\n",t6);
+     expand(s7,t7);
+     printf("%s\n",t7);
+     expand(s8,t8);
+     printf("%s\n",t8);
+     getchar();
+}
+
+
+/* logic:
+
+1) first for loop is used to run through the length of string along with islower,isdigit functions to identify the character in the string
+2) ex:a-z... assign 'from'= a(97)..assign 'to'=z(97+26).. declare from and to as int
+3) use a for loop to save the expansion exp[j]=i(number) but since exp[] is declared as char.. abcdef.. appears at the o/p insted of numebrs
+*/
+void expand(char shortt[],char exp[])
+{
+
+    int from,to,j,i,k,temp;
+
+    j = 0;
+    temp=shortt[2];/* using a temp variable for cases like a-b-c */
+    /* 1) in cases like a-b-c... 
+          temp = b = shortt[2]...
+          from = a..... to = b
+          if(a != b)(for loop within if)
+          print ab
+          next run in the loop
+          if(b != b)
+          print c only,not bc( for lop within else )
+          if you dont use the temp variable then for cases like a-b-c o/p will be abbc
+          to avoid abbc, you use to separate for loops within an if else....*/
+          
+    for (k = 2; k < strlen(shortt); k++){
+        if ((islower(shortt[k]) && islower(shortt[k-2])) ||
+            (isupper(shortt[k]) && isupper(shortt[k-2])) ||
+            (isdigit(shortt[k]) && isdigit(shortt[k-2]))){
+            from = shortt[k-2];
+            to = shortt[k];
+            if (from != temp){
+                for (i = from; i <= to; i++,j++){
+                        exp[j]=i;
+                }
+            }
+                            
+            else{
+                    for (i = from+1; i <= to; i++,j++){
+                        exp[j]=i;
+                    }
+            }
+            temp=shortt[k];
+        }
+        
+      }    
+    exp[j]='\0';
+}
